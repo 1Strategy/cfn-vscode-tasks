@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Basic EC2 instance with SecurityGroup allowing SSH inbound access.
+
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+
+  VPCParameter:
+    Type: AWS::EC2::VPC::Id
+    Description: Create instance security group in this VPC
+
+  SubnetParameter:
+    Type: AWS::EC2::Subnet::Id
+    Description: Deploy EC2 instance to this subnet
+
+  SSHKeyPairParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: SSH key pair name
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH from the world
+      VpcId: !Ref VPCParameter
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-e689729e
+      InstanceType: !Ref InstanceTypeParameter
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      KeyName: !Ref SSHKeyPairParameter
+      SubnetId: !Ref SubnetParameter
+      UserData:
+        Fn::Base64: !Sub |
+         #!/usr/bin/env bash
+         set -o errexit
+
+         yum -y update
+
+Outputs:
+  EC2PublicIp:
+    Description: Public IP for instance
+    Value: !GetAtt MyEC2Instance.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicIp"
