@@ -20,7 +20,7 @@ We'll cover commands to validate a CloudFormation template, deploy a template, s
 The first command is [`validate-template`](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/validate-template.html). It returns an error if your template isn't valid. Here's an example:
 
 ```
-aws cloudformation validate-template --template-body file://my-template.yaml
+aws cloudformation validate-template --template-body file://ec2-instance.yaml
 ```
 
 ### Deploy Template
@@ -30,7 +30,6 @@ The next command is [`deploy`](http://docs.aws.amazon.com/cli/latest/reference/c
 ```
 aws cloudformation deploy --template-file ec2-instance.yaml --stack-name ec2-instance --parameter-overrides VPCParameter=vpc-abcd1234
 ```
-)
 
 ### View Stack Outputs
 
@@ -50,7 +49,7 @@ aws cloudformation delete-stack --stack-name ec2-instance
 
 ## Tasks in VSCode
 
-Since VSCode doesn't have built-in Tasks support for AWS CloudFormation, we'll have to configure our own custom Tasks. VSCode allows you to create and run [Custom Tasks](https://code.visualstudio.com/docs/editor/tasks#_custom-tasks). You can even configure a task to be the default build task, which is executed with `Ctrl + Shift + B`.
+Since VSCode doesn't have built-in Tasks support for AWS CloudFormation, we'll have to configure our own custom Tasks. VSCode allows you to create and run [Custom Tasks](https://code.visualstudio.com/docs/editor/tasks#_custom-tasks). You can even configure a task to be the default build task, which is executed with `Cmd + Shift + B` on a Mac, or `Ctrl + Shift + B` on Windows/Linux.
 
 ### Create a tasks.json file
 
@@ -70,7 +69,7 @@ Let's run the `validate-template` task. Assuming you've cloned the sample git re
 
 ### Deploying
 
- Although normally used for things like compiling Go code, or transpiling TypeScript into JavaScript, you can also define any custom task as a "build" task. I've defined the AWS CloudFormation `deploy` task as the default Build task. On a Mac, hitting `Cmd + Shift + B` runs the default Build task. This gives you a simple key combination to deploy your CloudFormation template right from your editor. It opens a new VSCode terminal panel to display the results of deploying your stack.
+ Although normally used for things like compiling Go code, or transpiling TypeScript into JavaScript, you can also define any custom task as a "build" task. I've defined the AWS CloudFormation `deploy` task as the default Build task. Hitting `Cmd + Shift + B` on a Mac, or `Ctrl + Shift + B` on Windows/Linux runs the default Build task. This gives you a simple key combination to deploy your CloudFormation template right from your editor. It opens a new VSCode terminal panel to display the results of deploying your stack.
 
 ### Showing the Stack Outputs
 
